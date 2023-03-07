@@ -71,6 +71,28 @@ public static partial class GFunc
         return targetObj_;
     }       // GetRootObj()
 
+    //! 특정 오브젝트의 자식 오브젝트를 모두 리턴하는 함수
+    public static List<GameObject> GetChildrenObjs(this GameObject targetObj_)
+    {
+        List<GameObject> objs = new List<GameObject>();
+        GameObject searchTarget = default;
+
+        for (int i = 0; i < targetObj_.transform.childCount; i++)
+        {
+            searchTarget = targetObj_.transform.GetChild(i).gameObject;
+            objs.Add(searchTarget);
+        }
+
+        if (objs.IsValid())
+        {
+            return objs;
+        }
+        else
+        {
+            return default(List<GameObject>);
+        }
+    }   //  GetChildrenObjs()
+
     //! RectTransform 을 찾아서 리턴하는 함수
     public static RectTransform GetRect(this GameObject obj_)
     {
@@ -90,18 +112,98 @@ public static partial class GFunc
         return activeScene_;
     }       // GetActiveScene()
 
+    //! 컴포넌트 가져오는 함수
+    public static T GetComponentMust<T>(this GameObject obj) where T : Component
+    {
+        T component_ = obj.GetComponent<T>();
+
+        GFunc.Assert(component_.IsValid<T>() != false, 
+            string.Format("{0}에서 {1}을(를) 찾을 수 없습니다.",
+            obj.name, component_.GetType().Name));
+
+        return component_;
+    }       // GetComponentMust()
+
+    //! 새로운 오브젝트를 만들어서 컴포넌트를 리턴하는 함수
+    public static T CreateObj<T>(string objName) where T : Component
+    {
+        GameObject newObj = new GameObject(objName);
+        return newObj.AddComponent<T>();
+    }       // CreateObj()
+
+    //! 오브젝트를 파괴하는 함수
+    public static void DestroyObj(this GameObject obj_, float delay = 0.0f)
+    {
+        Object.Destroy(obj_, delay);
+    }   //  DestroyObj()
+
+    //! 로컬 포지션을 기준으로 두 타일 오브젝트의 위치를 비교하는 함수
+    public static int CompareTileObjToLocalPos2D(GameObject firstObj, GameObject secondObj)
+    {
+        Vector2 fPos = firstObj.transform.localPosition;
+        Vector2 sPos = secondObj.transform.localPosition;
+
+        int compareResult = 0;
+        if (fPos.y.IsEquals(sPos.y))
+        {
+            //  x 포지션이 같으면 같은 타일이므로 0을 리턴
+            if (fPos.x.IsEquals(sPos.x))
+            {
+                compareResult = 0;
+            }
+            else
+            {
+                if (fPos.x < sPos.x)
+                {
+                    compareResult = -1;
+                }
+                else
+                {
+                    compareResult = 1;
+                }
+            }
+            return compareResult;
+        }
+
+        if (fPos.y < sPos.y)
+        {
+            compareResult = -1;
+        }
+        else
+        {
+            compareResult = 1;
+        }
+
+        return compareResult;
+    }   //  CompareTileObjToLocalPos2D()
+
+
+    #region Object transform control
+
+    //! 오브젝트의 로컬 스케일을 변경하는 함수
+    public static void SetLocalScale(this GameObject obj_, Vector3 localScale_)
+    {
+        obj_.transform.localScale = localScale_;
+    }   //  SetLocalScale()
+
     //! 오브젝트의 로컬 포지션을 변경하는 함수
-    public static void SetLocalPos(this GameObject obj_, 
+    public static void SetLocalPos(this GameObject obj_,
         float x, float y, float z)
     {
         obj_.transform.localPosition = new Vector3(x, y, z);
     }       // SetLocalPos()
 
+    public static void SetLocalPos(this GameObject obj_,
+    Vector3 localPos)
+    {
+        obj_.transform.localPosition = localPos;
+    }       // SetLocalPos()
+
     //! 오브젝트의 로컬 포지션을 연산하는 함수
-    public static void AddLocalPos(this GameObject obj_, 
+    public static void AddLocalPos(this GameObject obj_,
         float x, float y, float z)
     {
-        obj_.transform.localPosition = 
+        obj_.transform.localPosition =
             obj_.transform.localPosition + new Vector3(x, y, z);
     }       // AddLocalPos()
 
@@ -124,23 +226,5 @@ public static partial class GFunc
     {
         transform_.Translate(moveVector.x, moveVector.y, 0f);
     }       // Translate()
-
-    //! 컴포넌트 가져오는 함수
-    public static T GetComponentMust<T>(this GameObject obj) where T : Component
-    {
-        T component_ = obj.GetComponent<T>();
-
-        GFunc.Assert(component_.IsValid<T>() != false, 
-            string.Format("{0}에서 {1}을(를) 찾을 수 없습니다.",
-            obj.name, component_.GetType().Name));
-
-        return component_;
-    }       // GetComponentMust()
-
-    //! 새로운 오브젝트를 만들어서 컴포넌트를 리턴하는 함수
-    public static T CreateObj<T>(string objName) where T : Component
-    {
-        GameObject newObj = new GameObject(objName);
-        return newObj.AddComponent<T>();
-    }       // CreateObj()
+    #endregion
 }

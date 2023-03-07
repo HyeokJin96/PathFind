@@ -67,7 +67,7 @@ public static partial class GFunc
     //! 리스트의 유효성을 검사
     public static bool IsValid<T>(this List<T> list_)
     {
-        bool isInvalid = (list_ == null || list_ == default || list_.Count == 0);
+        bool isInvalid = (list_ == null || list_ == default || list_.Count == 1);
         return !isInvalid;
     }   //  IsValid()
 
@@ -78,4 +78,35 @@ public static partial class GFunc
     }   //  IsValid()
 
     #endregion      // Vaild Func
+
+    //! 리스트를 생성해서 리턴하는 함수
+    /**
+     * @param int listLength : 생성할 리스트의 길이
+     * @param int startIndex : 리시트에 연속으로 할당할 인덱스의 시작 숫자
+     * @return List<T> list_ : 연속된 숫자로 생성한 리스트
+     */
+
+    public static List<int> CreateList(int listLength, int startIndex = 0)
+    {
+        List<int> list_ = new List<int>();
+        for (int i = 0; i < listLength; i++)
+        {
+            list_.Add(startIndex + i);
+        }
+        return list_;
+    }   //  CreateList()
+
+    //! 두 변수의 값을 Swap 하는 함수
+    public static void Swap<T>(ref T sourValue, ref T destValue)
+    {
+        T tempValue = sourValue;
+        sourValue = destValue;
+        destValue = tempValue;
+    }   //  Swap()
+
+    //! 두 변수의 값을 Swap 하는 함수
+    public static void Swap<T>( (T sourValue, T destValue) swapvalue)
+    {
+        (T sourValue, T destValue) = (swapvalue.destValue, swapvalue.sourValue);
+    }   //  Swap()
 }
