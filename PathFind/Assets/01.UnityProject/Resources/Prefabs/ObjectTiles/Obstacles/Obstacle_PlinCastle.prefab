@@ -7,6 +7,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3479889311180432823, guid: a62e8ce5ce326e44cb0a15139df782c8, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3479889311180432823, guid: a62e8ce5ce326e44cb0a15139df782c8, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 681603305
+      objectReference: {fileID: 0}
     - target: {fileID: 3479889311295537545, guid: a62e8ce5ce326e44cb0a15139df782c8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -93,7 +101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3479889311295537546, guid: a62e8ce5ce326e44cb0a15139df782c8, type: 3}
       propertyPath: m_Name
-      value: Obstacle_PlaneCastle
+      value: Obstacle_PlinCastle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a62e8ce5ce326e44cb0a15139df782c8, type: 3}

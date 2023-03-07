@@ -18,6 +18,10 @@ public class MapBoard : MonoBehaviour
     {
         //  각종 매니저를 모두 초기화한다.
         ResManager.Instance.Create();
+        PathFinder.Instance.Create();
+
+        //  PathFinder에 맵 보드 컨트롤러를 캐싱한다.
+        PathFinder.Instance.mapBoard = this;
 
         //  맵에 지형을 초기화하여 배치한다.
         terrainMap = gameObject.FindChildComponent<TerrainMap>(TERRAIN_MAP_OBJ_NAME);
@@ -79,7 +83,7 @@ public class MapBoard : MonoBehaviour
     {
         Vector2Int tileIdx2D = Vector2Int.zero;
         tileIdx2D.x = idx1D % MapCellSize.x;
-        tileIdx2D.y = idx1D % MapCellSize.x;
+        tileIdx2D.y = idx1D / MapCellSize.x;
 
         return tileIdx2D;
     }   //  GetTileIdx2D()
@@ -115,6 +119,8 @@ public class MapBoard : MonoBehaviour
         idx2D_around4ways.Add(new Vector2Int(targetIdx2D.x, targetIdx2D.y - 1));
         idx2D_around4ways.Add(new Vector2Int(targetIdx2D.x, targetIdx2D.y + 1));
 
+        GFunc.Log($"4way : {idx2D_around4ways.Count}, {targetIdx2D}");
+
         foreach (var idx2D in idx2D_around4ways)
         {
             //  idx2D 가 유효한지 검사한다.
@@ -126,6 +132,7 @@ public class MapBoard : MonoBehaviour
             {
                 continue;
             }
+            idx1D_around4ways.Add(GetTileIdx1D(idx2D));
         }
         return idx1D_around4ways;
     }   //  GetTileIdx2D_Around4ways()

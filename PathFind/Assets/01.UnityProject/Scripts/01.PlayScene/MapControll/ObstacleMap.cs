@@ -115,10 +115,19 @@ public class ObstacleMap : TileMapController
 
             tempChangeTile = default;
         }   //  loop : 출발지와 목적지를 인스턴스화 해서 캐싱하는 루프
-    }
+
+        Update_SourceDestToPathFinder();
+    }   //  DoStart()
 
     public void Add_Obstacle(GameObject obstacle_)
     {
         allTileObjs.Add(obstacle_);
-    }
+    }   //  Add_Obstacle()
+
+    //! 패스 파인더에 출발지와 목적지를 설정한다.
+    public void Update_SourceDestToPathFinder()
+    {
+        PathFinder.Instance.sourceObj = castleObjs[0];
+        PathFinder.Instance.destinationObj = castleObjs[1];
+    }   //  Update_SourceDestToPathFinder()
 }
