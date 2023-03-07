@@ -6,10 +6,13 @@ using UnityEngine;
 public class MapBoard : MonoBehaviour
 {
     private const string TERRAIN_MAP_OBJ_NAME = "TerrainMap";
+    private const string OBSTACLE_MAP_OBJ_NAME = "ObstacleMap";
 
     public Vector2Int MapCellSize { get; private set; } = default;
     public Vector2 MapCellGap { get; private set; } = default;
+
     private TerrainMap terrainMap = default;
+    private ObstacleMap obstacleMap = default;
 
     private void Awake()
     {
@@ -21,6 +24,10 @@ public class MapBoard : MonoBehaviour
         terrainMap.InitAwake(this);
         MapCellSize = terrainMap.GetCellSize();
         MapCellGap = terrainMap.GetCellGap();
+
+        //  맵에 지물을 초기화하여 배치한다.
+        obstacleMap = gameObject.FindChildComponent<ObstacleMap>(OBSTACLE_MAP_OBJ_NAME);
+        obstacleMap.InitAwake(this);
     }   //  Awake()
 
     //! 타일 인덱스를 받아서 해당 타일을 리턴하는 함수
@@ -44,6 +51,8 @@ public class MapBoard : MonoBehaviour
         for (int y = 0; y < MapCellSize.y; y++)
         {
             tileIdx1D = y * MapCellSize.x + xIdx2D;
+
+            tempTile = terrainMap.GetTile(tileIdx1D);
             terrains.Add(tempTile);
         }   //  loop : y 열의 크기만큼 순회하는 루프
 
@@ -118,7 +127,6 @@ public class MapBoard : MonoBehaviour
                 continue;
             }
         }
-
         return idx1D_around4ways;
     }   //  GetTileIdx2D_Around4ways()
 }
