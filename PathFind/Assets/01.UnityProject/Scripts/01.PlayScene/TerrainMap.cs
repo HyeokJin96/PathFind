@@ -29,7 +29,7 @@ public class TerrainMap : TileMapController
             if (temTileY.IsEquals(allTileObjs[i].transform.localPosition.y) == false)
             {
                 mapCellSize.x = i;
-            break;
+                break;
             }
         }
 
@@ -69,6 +69,31 @@ public class TerrainMap : TileMapController
         }   //  Loop : 위에서 연산한 정보로 현재 타일맵에 바다를 적용하는 루프
 
         //  기존에 존재하는 타일의 순서를 조정하고, 컨트롤러를 캐싱하는 로직
+        TerrainController tempTerrain = default;
+        TerrainType terrainType = TerrainType.NONE;
+
+        int loopCnt = 0;
+        foreach(GameObject tile_ in allTileObjs)
+        {
+            tempTerrain = tile_.GetComponentMust<TerrainController>();
+            switch (tempTerrain.name)
+            {
+                case RDefine.TERRAIN_PREF_PLAIN:
+                    terrainType = TerrainType.PLANE_PASS;
+                    break;
+                case RDefine.TERRAIN_PREF_OCEAN:
+                    terrainType = TerrainType.OCEAN_N_PASS;
+                    break;
+                default:
+                    terrainType = TerrainType.NONE;
+                    break;
+            }   //  swithch : 지형별로 다른 설정을 한다.
+
+            tempTerrain.SetupTerrain(mapController, terrainType, loopCnt);
+            tempTerrain.transform.SetAsFirstSibling();
+            allTerrains.Add(tempTerrain);
+            loopCnt += 1;
+        }   //  loop : 타일의 이름과 렌더링 순서대로 정렬하는 루프
     }   //  Start()
 
     //! 초기화된 타일의 정보로 연산한 맵의 가로, 세로 크기를 리턴한다.
